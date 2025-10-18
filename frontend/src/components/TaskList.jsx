@@ -1,6 +1,5 @@
 import React from 'react'
-import TaskEmptyState from './TaskEmptyState';
-import TaskCard from './TaskCard';
+import {TaskCard, TaskEmptyState} from "./Index"
 
 const TaskList = ({filteredTasks, filter, handleTaskChanged}) => {
 

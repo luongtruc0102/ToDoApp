@@ -143,3 +143,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Nền mặc định cho toàn bộ trang */
+body {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #fefcff;
+  background-image:
+    radial-gradient(circle at 30% 70%, rgba(173, 216, 230, 0.35), transparent 60%),
+    radial-gradient(circle at 70% 30%, rgba(255, 182, 193, 0.4), transparent 60%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Ẩn icon mắt mặc định trong ô mật khẩu của trình duyệt */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+}

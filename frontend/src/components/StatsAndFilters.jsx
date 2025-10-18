@@ -1,7 +1,7 @@
 import React from 'react'
 import { Badge } from './ui/badge';
-import { FilterType } from '@/lib/data';
 import { Button } from './ui/button';
+import { FilterType } from '@/lib/data';
 import { Filter } from 'lucide-react';
 
 const StatsAndFilters = ({completedTasksCount = 0, activedTasksCount = 0, filter = "all", setFilter}) => {

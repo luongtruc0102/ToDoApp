@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const taskSchame = new mongoose.Schema(
+const taskSchema = new mongoose.Schema(
     {
         title: {
             type: String,
@@ -15,6 +15,11 @@ const taskSchame = new mongoose.Schema(
         completedAt: {
             type: Date,
             default: null,
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
         }
     },
     {
@@ -22,5 +27,5 @@ const taskSchame = new mongoose.Schema(
     }
 );
 
-const Task = mongoose.model("Task", taskSchame);
+const Task = mongoose.model("Task", taskSchema);
 export default Task;

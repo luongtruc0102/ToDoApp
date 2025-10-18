@@ -2,7 +2,8 @@ import express from "express";
 import Task from "../models/Task.js";
 
 export const getAllTasks = async (req, res) => {
-  const { filter = "today" } = req.query;
+  const { filter = "all" } = req.query;
+  const userId = req.user._id;
   const now = new Date();
   let startDate;
 
@@ -30,7 +31,10 @@ export const getAllTasks = async (req, res) => {
     }
   }
 
-  const query = startDate ? { createdAt: { $gte: startDate } } : {};
+  const query = { userId };
+  if (startDate) {
+    query.createdAt = { $gte: startDate };
+  }
 
   try {
     const result = await Task.aggregate([
@@ -61,12 +65,14 @@ export const getAllTasks = async (req, res) => {
 export const createTasks = async (req, res) => {
   try {
     const { title } = req.body;
-    const task = new Task({ title });
+    const userId = req.user._id;
+
+    const task = new Task({ title, userId, status: "active", });
 
     const newTask = await task.save();
     res.status(201).json(newTask);
   } catch (error) {
-    console.error("Lỗi khi gọi createTask", error);
+    console.error("❌ Lỗi khi gọi createTask", error);
     res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
@@ -74,8 +80,8 @@ export const createTasks = async (req, res) => {
 export const updateTasks = async (req, res) => {
   try {
     const { title, status, completedAt } = req.body;
-    const updatedTask = await Task.findByIdAndUpdate(
-      req.params.id,
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user._id },
       {
         title,
         status,
@@ -88,7 +94,7 @@ export const updateTasks = async (req, res) => {
       return res.status(404).json({ message: "Nhiệm vụ không tồn tại." });
     }
 
-    res.status(200).json({ updatedTask });
+    res.status(200).json(updatedTask);
   } catch (error) {
     console.error("Lỗi khi gọi updateTask", error);
     res.status(500).json({ message: "Lỗi hệ thống" });
@@ -97,7 +103,10 @@ export const updateTasks = async (req, res) => {
 
 export const deleteTasks = async (req, res) => {
   try {
-    const deleteTask = await Task.findByIdAndDelete(req.params.id);
+    const deleteTask = await Task.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
 
     if (!deleteTask) {
       return res.status(404).json({ message: "Nhiệm vụ không tồn tại." });
